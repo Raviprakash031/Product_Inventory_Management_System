@@ -1,0 +1,469 @@
+/*A retail store is looking to upgrade its existing inventory management system. They want a web-based system that can handle various inventory-related operations efficiently. The store has awarded the contract to your development team, and you are the lead Full-Stack Developer. The success of this initial project may lead to additional contracts from the retail store.
+The inventory management system should have the following features:
+Add a product to the inventory:
+Create a Product class with attributes like product ID, name, category, price, quantity, and supplier details.
+Implement a method to add a new product to the inventory by accepting the necessary details.
+Update product details:
+Implement a method to update the details of a product based on its ID.
+Allow for modifying attributes such as name, category, price, and quantity.
+Search for a product:
+Implement a method to search for a product by its ID or name and retrieve its details.
+Provide functionality to display a list of products matching a specific category.
+Track inventory levels:
+Implement a method to check the current stock level of a product by its ID.
+Provide functionality to display a list of products with low stock levels (quantity below a specified threshold).
+Manage suppliers:
+Create a Supplier class with attributes like supplier ID, name, contact person, contact number, and email address.
+Implement methods to add, update, and retrieve supplier details.
+Associate suppliers with the products they provide.
+Generate sales reports:
+Implement functionality to generate reports on sales and revenue based on a specified time period.
+Calculate and display the total sales, top-selling products, and revenue generated during the given time frame.
+Remove a product from the inventory:
+Implement a method to remove a product from the inventory based on its ID.
+You can use appropriate data structures such as HashMap or ArrayList to store and retrieve product and supplier information efficiently. Utilize OOP concepts to create classes for products and suppliers, and encapsulate their related attributes and methods.
+Ensure proper error handling, validation of inputs, and data integrity throughout the system. By employing efficient data structures, following OOP principles, and implementing the required features, you can develop a robust and effective inventory management system for the retail store.*/
+
+import java.util.*;
+
+class Product20{
+  private static int nextId=1;
+  private int  id;
+  private String name;
+  private String category;
+  private double  price;
+  private int quantity;
+  private Suplier supplierDetails;
+  Product20(String name,String category,double price,int quantity,Suplier suplierDetails){
+    this.id=nextId++;
+    this.name=name;
+    this.category=category;
+    this.price=price;
+    this.quantity=quantity;
+    this.supplierDetails=suplierDetails;
+  }
+
+public int getId() {
+	return id;
+}
+public void setId(int id) {
+	this.id = id;
+}
+public String getName() {
+	return name;
+}
+public void setName(String name) {
+	this.name = name;
+}
+public String getCategory() {
+	return category;
+}
+public void setCategory(String category) {
+	this.category = category;
+}
+public double getPrice() {
+	return price;
+}
+public void setPrice(double price) {
+	this.price = price;
+}
+public int getQuantity() {
+	return quantity;
+}
+public void setQuantity(int quantity) {
+	this.quantity = quantity;
+}
+public Suplier getSupplierDetails() {
+	return supplierDetails;
+}
+public void setSupplierDetails(Suplier supplierDetails) {
+	this.supplierDetails = supplierDetails;
+}
+}
+class Suplier{
+  private static int nextSuplierId=1;
+  private int suplierId;
+  private String suplierName;
+  private String contactPerson;
+  private long contactNumber;
+  private String emailAddress;
+  public Suplier(int suplierId,String suplierName,String contactPerson,long contactNumber,String emailAddress){
+    this.suplierId=nextSuplierId++;
+    this.suplierName=suplierName;
+    this.contactPerson=contactPerson;
+    this.contactNumber=contactNumber;
+    this.emailAddress=emailAddress;
+  }
+public int getSuplierId() {
+	return suplierId;
+}
+public void setSuplierId(int suplierId) {
+	this.suplierId = suplierId;
+}
+public String getSuplierName() {
+	return suplierName;
+}
+public void setSuplierName(String suplierName) {
+	this.suplierName = suplierName;
+}
+public String getContactPerson() {
+	return contactPerson;
+}
+public void setContactPerson(String contactPerson) {
+	this.contactPerson = contactPerson;
+}
+public long getContactNumber() {
+	return contactNumber;
+}
+public void setContactNumber(long contactNumber) {
+	this.contactNumber = contactNumber;
+}
+public String getEmailAddress() {
+	return emailAddress;
+}
+public void setEmailAddress(String emailAddress) {
+	this.emailAddress = emailAddress;
+}
+}
+class OutOfStockException extends Exception{
+  public OutOfStockException(String str){
+    super(str);
+  }
+}
+class InvalidThresholdException extends Exception{
+  public InvalidThresholdException(String str){
+    super(str);
+  }
+}
+class ProductMethods{
+  HashMap<Integer,Product20> hs=new HashMap<>();
+  public void addProductDetails(Product20 p){
+    hs.put(p.getId(),p);
+  }
+  public void remove(int id){
+    hs.remove(id);
+  }
+  public void updateProductDetails(int id,String name,String category,double price,int quantity){
+    Product20 product = hs.get(id);
+    if(product!=null){
+      
+      product.setName(name);
+      product.setCategory(category);
+      product.setPrice(price);
+      product.setQuantity(quantity);
+      
+    }
+    
+  }
+  public void displayAllProductDetails(){
+    boolean b=hs.isEmpty();
+    if(b==false){
+      for(Product20 p:hs.values()){
+        System.out.println("Product details are");
+        System.out.println("Product Id:"+p.getId());
+        System.out.println("Product name: "+p.getName());
+        System.out.println("Product Category: "+p.getCategory());
+        System.out.println("Product price: "+p.getPrice());
+        System.out.println("Product Quantity: "+p.getQuantity());
+        System.out.println("Product Suplier Details "+p.getSupplierDetails());
+      }
+      
+    }
+  }
+  public Product20 getProductDetailsById(int id){
+    return hs.get(id);
+  }
+  public ArrayList<Product20> getProductDetailsByCategory(String category){
+  ArrayList<Product20> al=new ArrayList<>();
+    for(Product20 pro:hs.values()){
+      if(pro.getCategory().equalsIgnoreCase(category)){
+        al.add(pro);
+      }
+    }
+    return al;
+  }
+  public int checkStockLevel(int id){
+    Product20 product = hs.get(id);
+    if(product!=null){
+      try{
+      if(product.getQuantity()<0){
+        throw new OutOfStockException("Out of staock");
+      }
+      else{
+       System.out.println(product.getQuantity());
+      }
+      }
+      catch(OutOfStockException e){
+        System.out.println(e.getMessage());
+      }
+    }
+    return 0;
+  }
+  public ArrayList<Product20> getProductByThreshold(int threshold){
+    ArrayList<Product20> al=new ArrayList<>();
+    for(Product20 pro:hs.values()){
+      try{
+      if(pro.getQuantity()>threshold){
+        throw new InvalidThresholdException("quantity is greater than threshold");
+      }
+      else{
+        al.add(pro);
+      }
+      }
+      catch(InvalidThresholdException e){
+        System.out.println(e.getMessage());
+      }
+    }
+    return al;
+  }
+  HashMap<Integer,Suplier> hs1=new HashMap<>();
+  public void addSupplierDetails(Suplier su){
+    hs1.put(su.getSuplierId(),su);
+    
+  }
+  public void updateSuplierDetails(int suplierId,String suplierName,String contactPerson,long contactNumber,String emailAddress){
+    Suplier su=hs1.get(suplierId);
+    if(su!=null){
+      su.setSuplierId(suplierId);
+      su.setSuplierName(suplierName);
+      su.setContactPerson(contactPerson);
+      su.setContactNumber(contactNumber);
+      su.setEmailAddress(emailAddress);
+      
+    }
+  }
+  public Suplier getSuplierDetailsById(int id){
+    return hs1.get(id);
+  }
+  public void associateProductIdWithSuplierId(int productId,int suplierId){
+    Product20 prod=getProductDetailsById(productId);
+    Suplier sup=getSuplierDetailsById(suplierId);
+    if(prod!=null && sup!=null){
+      prod.setSupplierDetails(sup);
+    }
+    else{
+      System.out.println("suplier and product is not found");
+    }
+  }
+   /*public void generateSalesReport(Date startDate, Date endDate) {
+    double totalSales = 0;
+    Map<Integer, Integer> productSales = new HashMap<>();
+    for (Product20 pro : hs.values()) {
+      int quantitySold = getRandomNumberInRange(0, pro.getQuantity());
+      double revenue = quantitySold * pro.getPrice();
+      totalSales += revenue;
+      productSales.put(pro.getId(), quantitySold);
+        }
+
+        System.out.println("Sales Report");
+        System.out.println("Start Date: " + startDate);
+        System.out.println("End Date: " + endDate);
+        System.out.println("Total Sales: " + totalSales);
+   }*/
+  
+}
+class InvalidContactNumber1 extends Exception{
+  InvalidContactNumber1(String msg){
+    super(msg);
+  }
+}
+public class ProductProject{
+  public static void main(String[] args){
+    Scanner sc=new Scanner(System.in);
+    ProductMethods pm=new ProductMethods();
+    while(true){
+      System.out.println("1.add the product details\n2.remove details\n3.update details\n4.get product details by id\n5.get product details by category\n6.check stock level\n7.check stock level by threshold\n8.Dilsplay the all product details");
+      System.out.println("enter the choice");
+      int choice =sc.nextInt();
+      switch(choice){
+        case 1:
+          System.out.println("enter the name");
+          sc.nextLine();
+          String name=sc.nextLine();
+          System.out.println("enter the category");
+          String category=sc.nextLine();
+          System.out.println("entre the price");
+          while(!sc.hasNextDouble()){
+            System.out.println("Invalid input please eneter valid input");
+            sc.next();
+          }
+          double price =sc.nextDouble();
+          if(price<0){
+            System.out.println("Please enter the price is greater than zero");
+            return;
+          }
+          System.out.println("enetr the quantity");
+          int quantity=sc.nextInt();
+          if(quantity<0){
+            System.out.println("please enter the valid quatity that is greater than 0");
+            return;
+          }
+          
+          /*System.out.println("1.add the suplier details\n2.update suplier details\n3..get suplier  details by id\n4.associate product Id with suplier Id");
+      System.out.println("enter the choice");
+      int choice1 =sc.nextInt();
+      switch(choice1){
+        case 1:*/
+          System.out.println("enter the suplier details");
+          System.out.println("enter the suplier id");
+          int suplierId=sc.nextInt();
+          System.out.println("enter the suplier name");
+          String suplierName=sc.nextLine();
+        
+          System.out.println("enter the suplier contact person");
+          sc.nextLine();
+          String contactPerson=sc.nextLine();
+          System.out.println("entre the conract number");
+          long contactNumber=sc.nextLong();
+        
+        if(1000000000l<=contactNumber && 9999999999l>=contactNumber){
+            contactNumber=contactNumber;
+          }
+          else{
+            try{
+              throw new InvalidContactNumber1("InvalidMobileNumber");
+            }
+            catch(InvalidContactNumber1 e){
+              System.out.print("Exception: "+e.getMessage());
+            }
+          }
+          sc.nextLine();
+          System.out.println("enter the email");
+          String emailAddress=sc.nextLine();
+          Suplier suplierDetails=new Suplier(suplierId,suplierName,contactPerson,contactNumber,emailAddress);
+          pm.addSupplierDetails(suplierDetails);
+          /*break;
+        case 2:
+          System.out.println("enter the suplier details to update");
+          int suplierId1=sc.nextInt();
+          String suplierName1=sc.nextLine();
+          String contactPerson1=sc.nextLine();
+          String contactNumber1=sc.nextLine();
+          String emailAddress1=sc.nextLine();
+          pm.updateSuplierDetails(suplierId1,suplierName1,contactPerson1,contactNumber1,emailAddress1);
+          break;
+        case 3:
+          System.out.println("entre the id to get suplier  details");
+          int suplierId2=sc.nextInt();
+          Suplier sup=pm.getSuplierDetailsById(suplierId2);
+          if(sup!=null){
+            System.out.println("Product Id: "+sup.getSuplierId());
+              System.out.println("Product name" +sup.getSuplierName());
+              System.out.println("Product category"+sup.getContactPerson());
+              System.out.println("Product Price: "+sup.getContactNumber());
+              System.out.println("Product quantity "+sup.getEmailAddress());
+          }
+          else{
+            System.out.println("no suplier details for that"+suplierId2);
+          }
+          break;*/
+            
+          
+          Product20 p=new Product20(name,category,price,quantity,suplierDetails);
+          pm.addProductDetails(p);
+          System.out.println("product details added successfully");
+          break;
+        case 2:
+          System.out.println("enter the id to remove");
+          
+          int id2=sc.nextInt();
+          if(id2<0){
+            System.out.println("please enter the valid id that is greater than 0");
+            return;
+          }
+          pm.remove(id2);
+          break;
+        case 3:
+          System.out.println("enter the product details to update");
+          System.out.println("enyer the id");
+          int id1=sc.nextInt();
+          System.out.println("enter the name");
+          String name1=sc.nextLine();
+          sc.nextLine();
+          System.out.println("enter the category");
+          String category1=sc.nextLine();
+          System.out.println("entre the price");
+          double price1 =sc.nextDouble();
+          System.out.println("enetr the quantity");
+          int quantity1=sc.nextInt();
+          System.out.println("enter the suplier details");
+          int suplierId1=sc.nextInt();
+          String suplierName1=sc.nextLine();
+          String contactPerson1=sc.nextLine();
+          long contactNumber1=sc.nextLong();
+          sc.nextLine();
+          String emailAddress1=sc.nextLine();
+          
+          
+          //System.out.println("enter the suplier details");
+          //String suplierDetails1=sc.nextLine();
+          pm.updateProductDetails(id1,name1,category1,price1,quantity1);
+          pm.updateSuplierDetails(suplierId1,suplierName1,contactPerson1,contactNumber1,emailAddress1);
+          System.out.println("product details updated successfully");
+          break;
+        case 4:
+          System.out.println("entre the id to get product details");
+          int id3=sc.nextInt();
+          Product20 pro=pm.getProductDetailsById(id3);
+          Suplier sup=pm.getSuplierDetailsById(id3);
+          if(pro!=null&& sup!=null){
+            System.out.println("Product Id: "+pro.getId());
+              System.out.println("Product name" +pro.getName());
+              System.out.println("Product category"+pro.getCategory());
+              System.out.println("Product Price: "+pro.getPrice());
+              System.out.println("Product quantity "+pro.getQuantity());
+              System.out.println("Suplier name: "+sup.getSuplierName());
+            System.out.println("Suplier Contact Person: "+sup.getContactPerson());
+            System.out.println("contact Number"+sup.getContactNumber());
+            System.out.println("contact email: "+sup.getEmailAddress());
+          }
+          else{
+            System.out.println("no product details for that"+id3);
+          }
+          break;
+        case 5:
+          System.out.println("enter the category");
+          sc.nextLine();
+          String category2=sc.nextLine();
+          ArrayList<Product20> al=pm.getProductDetailsByCategory(category2);
+          if(al!=null){
+            for(Product20 pro1:al){
+              System.out.println("Product Id: "+pro1.getId());
+              System.out.println("Product name" +pro1.getName());
+              System.out.println("Product category"+pro1.getCategory());
+              System.out.println("Product Price: "+pro1.getPrice());
+              System.out.println("Product quantity "+pro1.getQuantity());
+              System.out.println("Suplier details: "+pro1.getSupplierDetails());
+            }
+          }
+          break;
+        case 6:
+          System.out.println("enter the id to check stock levels");
+          int id4=sc.nextInt();
+          pm.checkStockLevel(id4);
+          
+          break;
+        case 7:
+          System.out.println("enter the threshhold value for low stock levels");
+          int threshold1=sc.nextInt();
+          ArrayList<Product20> al2=pm.getProductByThreshold(threshold1);
+          if(al2!=null){
+            for(Product20 pro2:al2){
+              System.out.println("Product Id: "+pro2.getId());
+              System.out.println("Product name" +pro2.getName());
+              System.out.println("Product category"+pro2.getCategory());
+              System.out.println("Product Price: "+pro2.getPrice());
+              System.out.println("Product quantity "+pro2.getQuantity());
+              System.out.println("Suplier details: "+pro2.getSupplierDetails());
+            }
+          }
+          break;
+        case 8:
+          
+          pm.displayAllProductDetails();
+        default:
+          System.exit(0);
+      }
+    }
+  }
+}

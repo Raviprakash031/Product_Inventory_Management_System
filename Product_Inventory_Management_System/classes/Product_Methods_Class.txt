@@ -1,0 +1,127 @@
+class ProductMethods{
+  HashMap<Integer,Product20> hs=new HashMap<>();
+  public void addProductDetails(Product20 p){
+    hs.put(p.getId(),p);
+  }
+  public void remove(int id){
+    hs.remove(id);
+  }
+  public void updateProductDetails(int id,String name,String category,double price,int quantity){
+    Product20 product = hs.get(id);
+    if(product!=null){
+      
+      product.setName(name);
+      product.setCategory(category);
+      product.setPrice(price);
+      product.setQuantity(quantity);
+      
+    }
+    
+  }
+  public void displayAllProductDetails(){
+    boolean b=hs.isEmpty();
+    if(b==false){
+      for(Product20 p:hs.values()){
+        System.out.println("Product details are");
+        System.out.println("Product Id:"+p.getId());
+        System.out.println("Product name: "+p.getName());
+        System.out.println("Product Category: "+p.getCategory());
+        System.out.println("Product price: "+p.getPrice());
+        System.out.println("Product Quantity: "+p.getQuantity());
+        System.out.println("Product Suplier Details "+p.getSupplierDetails());
+      }
+      
+    }
+  }
+  public Product20 getProductDetailsById(int id){
+    return hs.get(id);
+  }
+  public ArrayList<Product20> getProductDetailsByCategory(String category){
+  ArrayList<Product20> al=new ArrayList<>();
+    for(Product20 pro:hs.values()){
+      if(pro.getCategory().equalsIgnoreCase(category)){
+        al.add(pro);
+      }
+    }
+    return al;
+  }
+  public int checkStockLevel(int id){
+    Product20 product = hs.get(id);
+    if(product!=null){
+      try{
+      if(product.getQuantity()<0){
+        throw new OutOfStockException("Out of staock");
+      }
+      else{
+       System.out.println(product.getQuantity());
+      }
+      }
+      catch(OutOfStockException e){
+        System.out.println(e.getMessage());
+      }
+    }
+    return 0;
+  }
+  public ArrayList<Product20> getProductByThreshold(int threshold){
+    ArrayList<Product20> al=new ArrayList<>();
+    for(Product20 pro:hs.values()){
+      try{
+      if(pro.getQuantity()>threshold){
+        throw new InvalidThresholdException("quantity is greater than threshold");
+      }
+      else{
+        al.add(pro);
+      }
+      }
+      catch(InvalidThresholdException e){
+        System.out.println(e.getMessage());
+      }
+    }
+    return al;
+  }
+  HashMap<Integer,Suplier> hs1=new HashMap<>();
+  public void addSupplierDetails(Suplier su){
+    hs1.put(su.getSuplierId(),su);
+    
+  }
+  public void updateSuplierDetails(int suplierId,String suplierName,String contactPerson,long contactNumber,String emailAddress){
+    Suplier su=hs1.get(suplierId);
+    if(su!=null){
+      su.setSuplierId(suplierId);
+      su.setSuplierName(suplierName);
+      su.setContactPerson(contactPerson);
+      su.setContactNumber(contactNumber);
+      su.setEmailAddress(emailAddress);
+      
+    }
+  }
+  public Suplier getSuplierDetailsById(int id){
+    return hs1.get(id);
+  }
+  public void associateProductIdWithSuplierId(int productId,int suplierId){
+    Product20 prod=getProductDetailsById(productId);
+    Suplier sup=getSuplierDetailsById(suplierId);
+    if(prod!=null && sup!=null){
+      prod.setSupplierDetails(sup);
+    }
+    else{
+      System.out.println("suplier and product is not found");
+    }
+  }
+   /*public void generateSalesReport(Date startDate, Date endDate) {
+    double totalSales = 0;
+    Map<Integer, Integer> productSales = new HashMap<>();
+    for (Product20 pro : hs.values()) {
+      int quantitySold = getRandomNumberInRange(0, pro.getQuantity());
+      double revenue = quantitySold * pro.getPrice();
+      totalSales += revenue;
+      productSales.put(pro.getId(), quantitySold);
+        }
+
+        System.out.println("Sales Report");
+        System.out.println("Start Date: " + startDate);
+        System.out.println("End Date: " + endDate);
+        System.out.println("Total Sales: " + totalSales);
+   }*/
+  
+}

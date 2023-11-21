@@ -1,0 +1,45 @@
+class Suplier{
+  private static int nextSuplierId=1;
+  private int suplierId;
+  private String suplierName;
+  private String contactPerson;
+  private long contactNumber;
+  private String emailAddress;
+  public Suplier(int suplierId,String suplierName,String contactPerson,long contactNumber,String emailAddress){
+    this.suplierId=nextSuplierId++;
+    this.suplierName=suplierName;
+    this.contactPerson=contactPerson;
+    this.contactNumber=contactNumber;
+    this.emailAddress=emailAddress;
+  }
+public int getSuplierId() {
+	return suplierId;
+}
+public void setSuplierId(int suplierId) {
+	this.suplierId = suplierId;
+}
+public String getSuplierName() {
+	return suplierName;
+}
+public void setSuplierName(String suplierName) {
+	this.suplierName = suplierName;
+}
+public String getContactPerson() {
+	return contactPerson;
+}
+public void setContactPerson(String contactPerson) {
+	this.contactPerson = contactPerson;
+}
+public long getContactNumber() {
+	return contactNumber;
+}
+public void setContactNumber(long contactNumber) {
+	this.contactNumber = contactNumber;
+}
+public String getEmailAddress() {
+	return emailAddress;
+}
+public void setEmailAddress(String emailAddress) {
+	this.emailAddress = emailAddress;
+}
+}

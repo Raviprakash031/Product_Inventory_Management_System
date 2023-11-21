@@ -1,0 +1,20 @@
+class OutOfStockException extends Exception{
+  public OutOfStockException(String str){
+    super(str);
+  }
+}
+class InvalidThresholdException extends Exception{
+  public InvalidThresholdException(String str){
+    super(str);
+  }
+}
+class InvalidContactNumber1 extends Exception{
+  InvalidContactNumber1(String msg){
+    super(msg);
+  }
+}
+class InvalidContactNumber1 extends Exception{
+  InvalidContactNumber1(String msg){
+    super(msg);
+  }
+}
